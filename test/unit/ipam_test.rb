@@ -124,7 +124,7 @@ class IPAMTest < ActiveSupport::TestCase
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
-        ipam.ip_include?('2001:db8::1')
+        assert_equal true, ipam.ip_include?('2001:db8::1')
       end
   
       test 'should return false for big ipv6 subnet' do
@@ -135,13 +135,29 @@ class IPAMTest < ActiveSupport::TestCase
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
-        ipam.ip_include?('2001:db7::1')
+        assert_equal false, ipam.ip_include?('2001:db7::1')
       end
   
       test 'should return true for ipv4 subnet' do
+        subnet = FactoryBot.build(
+          :subnet_ipv4, :name => 'my_subnet',
+          :network => '10.0.0.1',
+          :mask => '255.255.255.0',
+          :ipam => IPAM::MODES[:random_db])
+        ipam = IPAM::RandomDb.new(:subnet => subnet)
+        
+        assert_equal true, ipam.ip_include?('10.0.0.100')
       end
   
       test 'should return false for ipv4 subnet' do
+        subnet = FactoryBot.build(
+          :subnet_ipv4, :name => 'my_subnet',
+          :network => '10.0.0.1',
+          :mask => '255.255.255.0',
+          :ipam => IPAM::MODES[:random_db])
+        ipam = IPAM::RandomDb.new(:subnet => subnet)
+        
+        assert_equal false, ipam.ip_include?('192.168.0.50')
       end
     end
   end
