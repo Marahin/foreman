@@ -122,6 +122,8 @@ class IPAMTest < ActiveSupport::TestCase
           :network => '2001:db8::',
           :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])
+
+          puts subnet.inspect
         ipam = IPAM::RandomDb.new(:subnet => subnet)
 
         puts ipam.inspect
