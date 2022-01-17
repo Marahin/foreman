@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class IPAMTest < ActiveSupport::TestCase
+
+
   context 'dhcp' do
     test "should find unused IP on proxy if proxy is set" do
       subnet = FactoryBot.build_stubbed(:subnet_ipv4, :ipam_dhcp, :name => 'my_subnet', :network => '192.168.1.0')
@@ -111,6 +113,36 @@ class IPAMTest < ActiveSupport::TestCase
       ipam = IPAM::RandomDb.new(:subnet => subnet)
       ipam.excluded_ips.stubs(:include?).returns(true)
       assert_nil ipam.suggest_ip
+    end
+
+    context 'subnet_range inclusion' do
+      test 'should return true for big ipv6 subnet' do
+        subnet = FactoryBot.build(
+          :subnet_ipv4, :name => 'my_subnet',
+          :network => '2001:db8::',
+          :mask => '64',
+          :ipam => IPAM::MODES[:random_db])
+        ipam = IPAM::RandomDb.new(:subnet => subnet)
+        
+        subnet.ip_include?('2001:db8::1')
+      end
+  
+      test 'should return false for big ipv6 subnet' do
+        subnet = FactoryBot.build(
+          :subnet_ipv4, :name => 'my_subnet',
+          :network => '2001:db8::',
+          :mask => '64',
+          :ipam => IPAM::MODES[:random_db])
+        ipam = IPAM::RandomDb.new(:subnet => subnet)
+        
+        subnet.ip_include?('2001:db7::1')
+      end
+  
+      test 'should return true for ipv4 subnet' do
+      end
+  
+      test 'should return false for ipv4 subnet' do
+      end
     end
   end
 
