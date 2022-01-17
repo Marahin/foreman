@@ -124,7 +124,7 @@ class IPAMTest < ActiveSupport::TestCase
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
-        subnet.ip_include?('2001:db8::1')
+        ipam.ip_include?('2001:db8::1')
       end
   
       test 'should return false for big ipv6 subnet' do
@@ -135,7 +135,7 @@ class IPAMTest < ActiveSupport::TestCase
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
-        subnet.ip_include?('2001:db7::1')
+        ipam.ip_include?('2001:db7::1')
       end
   
       test 'should return true for ipv4 subnet' do
