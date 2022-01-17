@@ -118,7 +118,7 @@ class IPAMTest < ActiveSupport::TestCase
     context 'subnet_range inclusion' do
       test 'should return true for big ipv6 subnet' do
         subnet = FactoryBot.build(
-          :subnet_ipv6, :name => 'my_subnet',
+          :subnet_ipv4, :name => 'my_subnet',
           :network => '2001:db8::',
           :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])
@@ -129,7 +129,7 @@ class IPAMTest < ActiveSupport::TestCase
   
       test 'should return false for big ipv6 subnet' do
         subnet = FactoryBot.build(
-          :subnet_ipv6, :name => 'my_subnet',
+          :subnet_ipv4, :name => 'my_subnet',
           :network => '2001:db8::',
           :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])

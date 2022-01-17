@@ -1,4 +1,3 @@
-require 'rest-client'
 module Foreman
   module HttpProxy
     module RestClientExtension

@@ -206,7 +206,6 @@ module Foreman
     # the spoof detection based on HTTP_CLIENT_IP header performed by the middleware does not work
     config.action_dispatch.trusted_proxies = SETTINGS.fetch(:trusted_proxies, %w(127.0.0.1/8 ::1)).map { |proxy| IPAddr.new(proxy) }
 
-    require 'action_dispatch/session/active_record_store'
     # Record request and session tokens in logging MDC
     config.middleware.insert_before Rails::Rack::Logger, Foreman::Middleware::LoggingContextRequest
     config.middleware.insert_after ActionDispatch::Session::ActiveRecordStore, Foreman::Middleware::LoggingContextSession
