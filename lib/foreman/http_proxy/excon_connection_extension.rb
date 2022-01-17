@@ -1,3 +1,5 @@
+require 'excon'
+
 module Foreman
   module HttpProxy
     module ExconConnectionExtension

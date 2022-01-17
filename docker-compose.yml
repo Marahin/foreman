@@ -1,63 +1,37 @@
-version: '3.4'
+version: '3.8'
 services:
   db:
+    image: postgres
     environment:
-      - POSTGRES_USER=foreman
-      - POSTGRES_PASSWORD=foreman
-      - POSTGRES_DATABASE=foreman
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    hostname: db.example.com
-    image: postgres:10
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+  redis:
+    image: 'redis:4.0-alpine'
+    command: redis-server
     ports:
-      - 5432
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z 127.0.0.1 5432 || exit 1"]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-    volumes:
-      - db:/var/lib/postgresql/data
+      - '6379:6379'
 
-  app: &app_base
-    image: quay.io/foreman/foreman:develop
+  app:
+    # image: quay.io/foreman/foreman:develop
+    &app_base
+    entrypoint: [ bin/entry ]
     command: bundle exec bin/rails server -b 0.0.0.0
     build:
       context: .
+      dockerfile: Dockerfile.dev
     environment:
       - DATABASE_URL=postgres://foreman:foreman@db/foreman?pool=5
-      - RAILS_MAX_THREADS=5
-      - RAILS_ENV=production
-      - FOREMAN_FQDN=foreman.example.com
-      - FOREMAN_DOMAIN=example.com
+      - RAILS_ENV=development
       - FOREMAN_RAILS_CACHE_STORE_TYPE=redis
       - FOREMAN_RAILS_CACHE_STORE_URLS=redis://redis:6379/0
       - DYNFLOW_REDIS_URL=redis://redis-tasks:6379/0
       - REDIS_PROVIDER=DYNFLOW_REDIS_URL
-    hostname: foreman.example.com
     links:
       - db
-      - redis-cache
-      - redis-tasks
     ports:
-      - "${MY_DOCKER_IP:-127.0.0.1}:3000:3000"
-      - "${MY_DOCKER_IP:-127.0.0.1}:5910-5930:5910-5930"
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z 127.0.0.1 3000 || exit 1"]
-      interval: 5m
-      start_period: 1m
-
-  orchestrator:
-    <<: *app_base
-    command: bundle exec sidekiq -r ./extras/dynflow-sidekiq.rb -c 1 -q dynflow_orchestrator
-    hostname: orchestrator.example.com
-    ports: []
-
-  worker:
-    <<: *app_base
-    command: bundle exec sidekiq -r ./extras/dynflow-sidekiq.rb -c 15 -q default,remote_execution
-    ports: []
+      - 3000:3000
+      - 5910-5930:5910-5930
+    volumes:
+      - './:/myapp'
 
   redis-cache:
     image: redis
@@ -69,5 +43,5 @@ services:
       - redis-persistent:/data
 
 volumes:
-  db:
-  redis-persistent:
+  db: null
+  redis-persistent: null
