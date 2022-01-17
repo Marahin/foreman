@@ -120,7 +120,7 @@ class IPAMTest < ActiveSupport::TestCase
         subnet = FactoryBot.build(
           :subnet_ipv4, :name => 'my_subnet',
           :network => '2001:db8::',
-          :mask => '64',
+          :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
@@ -131,7 +131,7 @@ class IPAMTest < ActiveSupport::TestCase
         subnet = FactoryBot.build(
           :subnet_ipv4, :name => 'my_subnet',
           :network => '2001:db8::',
-          :mask => '64',
+          :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
         
