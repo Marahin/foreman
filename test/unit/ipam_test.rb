@@ -123,6 +123,8 @@ class IPAMTest < ActiveSupport::TestCase
           :mask => 'ffff:ffff:ffff:ffff::',
           :ipam => IPAM::MODES[:random_db])
         ipam = IPAM::RandomDb.new(:subnet => subnet)
+
+        puts ipam.inspect
         
         assert_equal true, ipam.ip_include?('2001:db8::1')
       end
