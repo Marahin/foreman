@@ -17,7 +17,7 @@ module IPAM
       @mac = nil if @mac.try(:blank?)
       @errors = ActiveModel::Errors.new(self)
       @block_ip_minutes = opts.fetch(:block_ip_minutes, BLOCK_IP_MINUTES_DEFAULT)
-      @ip_addr = IPAddr.new("#{subnet.network}/#{subnet.mask}", subnet.family)
+      @ip_addr = IPAddr.new("#{subnet.network}/#{subnet.mask}")
 
       normalize_mac!
     end
