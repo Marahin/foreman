@@ -35,8 +35,7 @@ module IPAM
     end
 
     def ip_include?(ip)
-      puts "comparing #{ip} with #{ip_addr}"
-      ip === ip_addr
+      ip_addr.include?(ip)
     end
 
     def suggest_new?
